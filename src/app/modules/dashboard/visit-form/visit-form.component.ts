@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Visita } from '../services/visita.model';
-import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { VisitaService } from '../services/visita.service';
 import { UsuarioService } from '../services/usuario.service';
+import { ClienteService } from '../services/cliente.service';
+import { Usuario } from '../services/usuario.model';
+import { Cliente } from '../services/cliente.model';
 
 @Component({
   selector: 'app-visit-form',
@@ -11,74 +13,65 @@ import { UsuarioService } from '../services/usuario.service';
   styleUrls: ['./visit-form.component.css']
 })
 export class VisitFormComponent implements OnInit {
-  visitForm: FormGroup;
-  visitId: number | null = null;
-  title: string = 'Registrar Nueva Visita';
 
-  userRol = '';
-  tecnicos: Array<{ id: number; nombre: string }> = [];
+  visitaForm!: FormGroup;
+  tecnicos: Usuario[] = [];
+  clientes: Cliente[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
-    private usuarioService: UsuarioService
-  ) {
-    this.visitForm = this.fb.group({
-      idCliente: [null, Validators.required],
-      idTecnico: [null, Validators.required],
-      fechaPlanificada: [this.formatDate(new Date()), Validators.required],
-      estado: ['PENDIENTE', Validators.required],
-      reporteVisita: ['', [Validators.minLength(10)]]
-    });
-  }
+    private visitaService: VisitaService,
+    private usuarioService: UsuarioService,
+    private clienteService: ClienteService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.userRol = this.authService.getRol() || 'SIN_ROL';
+    // ✅ Crear formulario reactivo
+    this.visitaForm = this.fb.group({
+      idCliente: ['', Validators.required],
+      idTecnico: ['', Validators.required],
+      fechaPlanificada: ['', Validators.required],
+      estado: ['PENDIENTE'],
+      reporteVisita: ['', Validators.required]
+    });
 
-    // Cargar técnicos solo para supervisor/administrador
-    if (this.userRol === 'SUPERVISOR' || this.userRol === 'ADMINISTRADOR') {
-      this.usuarioService.getUsuarios().subscribe((usuarios: any[]) => {
-        this.tecnicos = usuarios
-          .filter(u => (u.rol || '').toUpperCase() === 'TECNICO')
-          .map(u => ({ id: u.id, nombre: u.nombre }));
-      });
-    }
+    // ✅ Cargar lista de técnicos (filtro por rol)
+    this.usuarioService.getUsuarios().subscribe({
+      next: (data: Usuario[]) => {
+        this.tecnicos = data.filter(u =>
+          typeof u.rol === 'string' && u.rol.toUpperCase().includes('TÉCNICO')
+        );
+      },
+      error: err => console.error('Error al cargar técnicos:', err)
+    });
 
-    // Edición
-    this.route.paramMap.subscribe(params => {
-      const idParam = params.get('id');
-      if (idParam) {
-        this.visitId = +idParam;
-        this.title = `Editar Visita Técnica #${this.visitId}`;
-        // TODO: si quieres, carga del detalle real desde el servicio
-      }
+    // ✅ Cargar lista de clientes
+    this.clienteService.getClientes().subscribe({
+      next: (data: Cliente[]) => {
+        this.clientes = data;
+      },
+      error: err => console.error('Error al cargar clientes:', err)
     });
   }
 
-  private formatDate(date: Date): string {
-    const d = new Date(date);
-    const month = ('0' + (d.getMonth() + 1)).slice(-2);
-    const day = ('0' + d.getDate()).slice(-2);
-    const year = d.getFullYear();
-    return `${year}-${month}-${day}`;
-  }
+  registrarVisita(): void {
+    if (this.visitaForm.valid) {
+      const visitaData = this.visitaForm.value;
+      console.log('📤 Enviando datos al backend:', visitaData);
 
-  saveVisit(): void {
-    if (this.visitForm.invalid) {
-      this.visitForm.markAllAsTouched();
-      return;
+      this.visitaService.createVisita(visitaData).subscribe({
+        next: () => {
+          alert('✅ Visita registrada correctamente');
+          this.router.navigate(['/dashboard/visitas']);
+        },
+        error: (err) => {
+          console.error('Error al registrar la visita:', err);
+          alert('❌ Ocurrió un error al registrar la visita.');
+        }
+      });
+    } else {
+      alert('Por favor complete todos los campos.');
     }
-
-    const payload = this.visitForm.value as Partial<Visita>;
-
-    // Aquí llamas a create/update del servicio real.
-    // Por ahora, navega al listado.
-    this.router.navigate(['/dashboard/visitas']);
-  }
-
-  cancel(): void {
-    this.router.navigate(['/dashboard/visitas']);
   }
 }

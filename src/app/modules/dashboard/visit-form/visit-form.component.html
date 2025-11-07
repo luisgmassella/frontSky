@@ -1,75 +1,59 @@
-<section class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6"><h1>{{ title }}</h1></div>
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">Inicio</a></li>
-          <li class="breadcrumb-item"><a [routerLink]="['/dashboard/visitas']">Visitas</a></li>
-          <li class="breadcrumb-item active">{{ visitId ? 'Editar' : 'Registrar' }}</li>
-        </ol>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="card p-3 shadow-sm">
+  <h4 class="mb-3">Registrar Nueva Visita</h4>
 
-<section class="content">
-  <div class="container-fluid">
-    <div class="card card-primary card-outline">
-      <div class="card-header">
-        <h3 class="card-title">Detalles de la Visita</h3>
+  <form [formGroup]="visitaForm" (ngSubmit)="registrarVisita()">
+
+    <!-- FILA 1 -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="idCliente">Cliente</label>
+        <select id="idCliente" class="form-control" formControlName="idCliente">
+          <option value="">-- Seleccione un cliente --</option>
+          <option *ngFor="let c of clientes" [value]="c.id">
+            {{ c.nombreEmpresa }}
+          </option>
+        </select>
+        <small *ngIf="visitaForm.get('idCliente')?.invalid && visitaForm.get('idCliente')?.touched" class="text-danger">
+          Seleccione un cliente.
+        </small>
       </div>
 
-      <form [formGroup]="visitForm" (ngSubmit)="saveVisit()">
-        <div class="card-body">
-          <div class="row">
-            <!-- Cliente -->
-            <div class="form-group col-md-6">
-              <label>Cliente</label>
-              <input class="form-control" formControlName="idCliente" placeholder="ID Cliente">
-            </div>
-
-            <!-- Técnico (solo supervisor/admin) -->
-            <div class="form-group col-md-6" *ngIf="userRol === 'SUPERVISOR' || userRol === 'ADMINISTRADOR'">
-              <label for="idTecnico">Técnico Asignado</label>
-              <select id="idTecnico" class="form-control" formControlName="idTecnico">
-                <option [ngValue]="null" disabled>-- Seleccione un técnico --</option>
-                <option *ngFor="let t of tecnicos" [ngValue]="t.id">{{ t.nombre }}</option>
-              </select>
-            </div>
-
-            <!-- Fecha -->
-            <div class="form-group col-md-4">
-              <label>Fecha</label>
-              <input type="date" class="form-control" formControlName="fechaPlanificada">
-            </div>
-
-            <!-- Estado -->
-            <div class="form-group col-md-4">
-              <label>Estado</label>
-              <select class="form-control" formControlName="estado">
-                <option>PENDIENTE</option>
-                <option>EN_PROCESO</option>
-                <option>FINALIZADA</option>
-                <option>CANCELADA</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Reporte -->
-          <div class="form-group">
-            <label>Descripción / Reporte</label>
-            <textarea rows="4" class="form-control" formControlName="reporteVisita" placeholder="Detalle del trabajo"></textarea>
-          </div>
-        </div>
-
-        <div class="card-footer text-right">
-          <button type="button" class="btn btn-default mr-2" (click)="cancel()">Cancelar</button>
-          <button type="submit" class="btn btn-success" [disabled]="visitForm.invalid">
-            {{ visitId ? 'Guardar Cambios' : 'Registrar Visita' }}
-          </button>
-        </div>
-      </form>
+      <div class="col-md-6">
+        <label for="idTecnico">Técnico Asignado</label>
+        <select id="idTecnico" class="form-control" formControlName="idTecnico">
+          <option value="">-- Seleccione un técnico --</option>
+          <option *ngFor="let t of tecnicos" [value]="t.id">
+            {{ t.nombre }} ({{ t.rol }})
+          </option>
+        </select>
+        <small *ngIf="visitaForm.get('idTecnico')?.invalid && visitaForm.get('idTecnico')?.touched" class="text-danger">
+          Seleccione un técnico.
+        </small>
+      </div>
     </div>
-  </div>
-</section>
+
+    <!-- FILA 2 -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="fechaPlanificada">Fecha planificada</label>
+        <input id="fechaPlanificada" type="date" class="form-control" formControlName="fechaPlanificada">
+      </div>
+
+      <div class="col-md-6">
+        <label for="estado">Estado</label>
+        <input id="estado" type="text" class="form-control" formControlName="estado" readonly>
+      </div>
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+    <div class="mb-3">
+      <label for="reporteVisita">Descripción / Reporte</label>
+      <textarea id="reporteVisita" rows="3" class="form-control" formControlName="reporteVisita"
+        placeholder="Detalle del trabajo a realizar o reporte de la visita"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!visitaForm.valid">
+      Guardar Visita
+    </button>
+  </form>
+</div>
