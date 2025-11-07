@@ -1,0 +1,78 @@
+<div class="container-fluid">
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>Gestión de Clientes</h1>
+    </div>
+    <div class="col-sm-6">
+      <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">Inicio</a></li>
+        <li class="breadcrumb-item active">Clientes</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="card card-primary card-outline">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">Listado de Clientes</h3>
+        <button class="btn btn-sm btn-success" (click)="createNewClient()">
+          <i class="fas fa-plus"></i> Nuevo Cliente
+        </button>
+      </div>
+
+      <div class="card-body">
+        <div *ngIf="isLoading" class="text-center py-4">
+          <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+          <p class="mt-2">Cargando clientes...</p>
+        </div>
+
+        <div *ngIf="!isLoading && clientes.length > 0" class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre de Empresa</th>
+                <th>Contacto</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Coordenadas</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cliente of clientes">
+                <td>{{ cliente.id }}</td>
+                <td>{{ cliente.nombreEmpresa }}</td>
+                <td>{{ cliente.contacto }}</td>
+                <td>{{ cliente.telefono }}</td>
+                <td>{{ cliente.email }}</td>
+                <td>
+                  <span *ngIf="cliente.latitud && cliente.longitud">
+                    Lat: {{ cliente.latitud }} <br />
+                    Long: {{ cliente.longitud }}
+                  </span>
+                  <span *ngIf="!cliente.latitud">N/A</span>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-info mr-2" (click)="editClient(cliente.id)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteClient(cliente.id)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="!isLoading && clientes.length === 0" class="text-center text-muted py-4">
+          <i class="fas fa-users-slash fa-3x mb-2"></i>
+          <p>No hay clientes registrados.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

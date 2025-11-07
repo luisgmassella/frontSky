@@ -1,0 +1,75 @@
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6"><h1>{{ title }}</h1></div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a [routerLink]="['/dashboard']">Inicio</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="['/dashboard/visitas']">Visitas</a></li>
+          <li class="breadcrumb-item active">{{ visitId ? 'Editar' : 'Registrar' }}</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-primary card-outline">
+      <div class="card-header">
+        <h3 class="card-title">Detalles de la Visita</h3>
+      </div>
+
+      <form [formGroup]="visitForm" (ngSubmit)="saveVisit()">
+        <div class="card-body">
+          <div class="row">
+            <!-- Cliente -->
+            <div class="form-group col-md-6">
+              <label>Cliente</label>
+              <input class="form-control" formControlName="idCliente" placeholder="ID Cliente">
+            </div>
+
+            <!-- Técnico (solo supervisor/admin) -->
+            <div class="form-group col-md-6" *ngIf="userRol === 'SUPERVISOR' || userRol === 'ADMINISTRADOR'">
+              <label for="idTecnico">Técnico Asignado</label>
+              <select id="idTecnico" class="form-control" formControlName="idTecnico">
+                <option [ngValue]="null" disabled>-- Seleccione un técnico --</option>
+                <option *ngFor="let t of tecnicos" [ngValue]="t.id">{{ t.nombre }}</option>
+              </select>
+            </div>
+
+            <!-- Fecha -->
+            <div class="form-group col-md-4">
+              <label>Fecha</label>
+              <input type="date" class="form-control" formControlName="fechaPlanificada">
+            </div>
+
+            <!-- Estado -->
+            <div class="form-group col-md-4">
+              <label>Estado</label>
+              <select class="form-control" formControlName="estado">
+                <option>PENDIENTE</option>
+                <option>EN_PROCESO</option>
+                <option>FINALIZADA</option>
+                <option>CANCELADA</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Reporte -->
+          <div class="form-group">
+            <label>Descripción / Reporte</label>
+            <textarea rows="4" class="form-control" formControlName="reporteVisita" placeholder="Detalle del trabajo"></textarea>
+          </div>
+        </div>
+
+        <div class="card-footer text-right">
+          <button type="button" class="btn btn-default mr-2" (click)="cancel()">Cancelar</button>
+          <button type="submit" class="btn btn-success" [disabled]="visitForm.invalid">
+            {{ visitId ? 'Guardar Cambios' : 'Registrar Visita' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

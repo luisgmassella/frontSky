@@ -1,0 +1,16 @@
+/* Estilos mínimos para la tabla, la mayoría proviene de AdminLTE/Bootstrap */
+
+.card-title {
+    font-weight: 600;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+/* Ajuste de cursor para filas clicables (si la tabla fuera clicable, en este caso los botones lo son) */
+/*
+.table tbody tr {
+    cursor: pointer;
+}
+*/

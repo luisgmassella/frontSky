@@ -1,0 +1,40 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- LOGO Y TÍTULO -->
+    <div class="logo-container">
+      <div class="text-logo">SkyNet</div>
+    </div>
+
+    <h2>Iniciar sesión</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="usernameOrEmail">Correo electrónico</label>
+        <input
+          type="email"
+          id="usernameOrEmail"
+          formControlName="usernameOrEmail"
+          class="form-control"
+          placeholder="Ingrese su correo"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          placeholder="Ingrese su contraseña"
+        />
+      </div>
+
+      <button type="submit" class="btn-login">Entrar</button>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </form>
+  </div>
+</div>

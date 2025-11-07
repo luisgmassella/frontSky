@@ -1,0 +1,83 @@
+<div class="container-fluid">
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <h1>Gestión de Visitas</h1>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="card card-primary card-outline">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">
+          {{ userRol === 'TECNICO' ? 'Mis visitas de hoy' : 'Listado de Visitas' }}
+        </h3>
+        <a *ngIf="userRol !== 'TECNICO'" class="btn btn-sm btn-success" [routerLink]="['/dashboard/visitas/registrar']">
+          Nueva Visita
+        </a>
+      </div>
+
+      <div class="card-body">
+        <div *ngIf="isLoading" class="text-center py-4">
+          <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+          <p class="mt-2">Cargando visitas...</p>
+        </div>
+
+        <div *ngIf="!isLoading && visitas.length > 0" class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Técnico</th>
+                <th>Fecha Planificada</th>
+                <th>Estado</th>
+                <th>Reporte</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of visitas">
+                <td>{{ v.id }}</td>
+                <td>{{ v.nombreCliente }}</td>
+                <td>{{ v.nombreTecnico }}</td>
+                <td>{{ v.fechaPlanificada | date: 'yyyy-MM-dd' }}</td>
+                <td>
+                  <span class="badge"
+                        [ngClass]="{
+                          'bg-warning': v.estado === 'PENDIENTE',
+                          'bg-info': v.estado === 'EN_PROCESO',
+                          'bg-success': v.estado === 'FINALIZADA',
+                          'bg-secondary': v.estado === 'CANCELADA'
+                        }">
+                    {{ v.estado }}
+                  </span>
+                </td>
+                <td>{{ v.reporteVisita || '—' }}</td>
+                <td class="text-center">
+                  <a *ngIf="mapsUrl(v)" class="btn btn-sm btn-outline-primary mr-1" [href]="mapsUrl(v)!" target="_blank">
+                    Mapa
+                  </a>
+                  <button class="btn btn-sm btn-outline-danger mr-1" (click)="generarPDF(v)">
+                    PDF
+                  </button>
+                  <button *ngIf="v.estado !== 'FINALIZADA' && userRol !== 'TECNICO'"
+                          class="btn btn-sm btn-success"
+                          (click)="actualizarEstado(v.id, 'FINALIZADA')">
+                    Finalizar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="!isLoading && visitas.length === 0" class="text-center text-muted py-4">
+          <i class="fas fa-calendar-times fa-3x mb-2"></i>
+          <p>No hay visitas registradas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

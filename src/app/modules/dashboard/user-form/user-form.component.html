@@ -1,0 +1,80 @@
+<div class="card card-primary card-outline">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3 class="card-title mb-0">{{ isEditMode ? 'Editar Usuario' : 'Crear Nuevo Usuario' }}</h3>
+    <button class="btn btn-default btn-sm" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Volver
+    </button>
+  </div>
+
+  <!-- 🔹 Asegúrate de que el form abre aquí y se cierra al final -->
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="card-body">
+      <div class="row">
+        <!-- Nombre -->
+        <div class="form-group col-md-6">
+          <label>Nombre completo</label>
+          <input
+            class="form-control"
+            type="text"
+            formControlName="nombre"
+            [class.is-invalid]="userForm.get('nombre')?.invalid && userForm.get('nombre')?.touched"
+          />
+          <div class="invalid-feedback">El nombre es obligatorio.</div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group col-md-6">
+          <label>Correo electrónico</label>
+          <input
+            class="form-control"
+            type="email"
+            formControlName="email"
+            [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="userForm.get('email')?.errors?.['required']">El email es obligatorio.</span>
+            <span *ngIf="userForm.get('email')?.errors?.['email']">El email no es válido.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Contraseña -->
+        <div class="form-group col-md-6">
+          <label>{{ isEditMode ? 'Nueva contraseña (opcional)' : 'Contraseña' }}</label>
+          <input
+            class="form-control"
+            type="password"
+            formControlName="password"
+            [class.is-invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched"
+          />
+          <div class="invalid-feedback">
+            <span *ngIf="userForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
+            <span *ngIf="userForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres.</span>
+          </div>
+        </div>
+
+        <!-- Rol -->
+        <div class="form-group col-md-6">
+          <label>Rol</label>
+          <select
+            class="form-control"
+            formControlName="id_rol"
+            [class.is-invalid]="userForm.get('id_rol')?.invalid && userForm.get('id_rol')?.touched"
+          >
+            <option [ngValue]="null" disabled>Seleccione un rol...</option>
+            <option *ngFor="let r of roles" [ngValue]="r.id">{{ r.nombre }}</option>
+          </select>
+          <div class="invalid-feedback">El rol es obligatorio.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔹 Footer dentro del form -->
+    <div class="card-footer">
+      <button class="btn btn-primary" type="submit" [disabled]="userForm.invalid">
+        <i class="fas fa-save"></i> {{ isEditMode ? 'Actualizar' : 'Guardar' }} Usuario
+      </button>
+    </div>
+  </form>
+</div>

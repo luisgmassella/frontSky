@@ -1,0 +1,70 @@
+<div class="card shadow">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">Datos del Cliente</h5>
+  </div>
+
+  <div class="card-body">
+    <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+
+      <!-- Nombre de la Empresa -->
+      <div class="form-group mb-3">
+        <label>Nombre de la Empresa *</label>
+        <input type="text" formControlName="nombre_empresa" class="form-control" placeholder="Ej: Logística Rápida Ltda.">
+        <small class="text-danger" *ngIf="submitted && clienteForm.controls['nombre_empresa'].invalid">
+          El nombre de la empresa es obligatorio.
+        </small>
+      </div>
+
+      <!-- Persona de Contacto -->
+      <div class="form-group mb-3">
+        <label>Persona de Contacto *</label>
+        <input type="text" formControlName="persona_contacto" class="form-control" placeholder="Ej: Pedro Sánchez">
+        <small class="text-danger" *ngIf="submitted && clienteForm.controls['persona_contacto'].invalid">
+          El nombre del contacto es obligatorio.
+        </small>
+      </div>
+
+      <!-- Teléfono -->
+      <div class="form-group mb-3">
+        <label>Teléfono *</label>
+        <input type="text" formControlName="telefono" class="form-control" placeholder="Ej: 55512345">
+        <small class="text-danger" *ngIf="submitted && clienteForm.controls['telefono'].invalid">
+          El teléfono es obligatorio.
+        </small>
+      </div>
+
+      <!-- Correo electrónico -->
+      <div class="form-group mb-3">
+        <label>Correo electrónico *</label>
+        <input type="email" formControlName="email" class="form-control" placeholder="Ej: contacto@empresa.com">
+        <small class="text-danger" *ngIf="submitted && clienteForm.controls['email'].invalid">
+          El email es obligatorio.
+        </small>
+      </div>
+
+      <!-- Mapa -->
+      <div class="form-group mb-3">
+        <label>Ubicación del Cliente (Seleccione en el mapa)</label>
+        <div id="map" style="height: 350px; width: 100%; border-radius: 10px; border: 1px solid #ccc;"></div>
+      </div>
+
+      <!-- Latitud -->
+      <div class="form-group mb-3">
+        <label>Latitud</label>
+        <input type="text" formControlName="latitud" class="form-control" placeholder="Ej: 14.6349">
+      </div>
+
+      <!-- Longitud -->
+      <div class="form-group mb-3">
+        <label>Longitud</label>
+        <input type="text" formControlName="longitud" class="form-control" placeholder="Ej: -90.5069">
+      </div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-start mt-4">
+        <button type="submit" class="btn btn-primary">Crear Cliente</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="onCancel()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

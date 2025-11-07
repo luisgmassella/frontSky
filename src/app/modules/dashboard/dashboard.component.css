@@ -1,0 +1,27 @@
+.main-sidebar {
+  width: 230px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #222d32;
+}
+
+.content-wrapper {
+  margin-left: 230px;
+  padding-top: 20px;
+}
+
+.nav-link:hover {
+  background-color: #1e282c;
+  border-radius: 5px;
+}
+
+.small-box {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.small-box:hover {
+  transform: translateY(-3px);
+}
