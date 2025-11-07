@@ -1,70 +1,43 @@
-<div class="card shadow">
-  <div class="card-header bg-primary text-white">
-    <h5 class="mb-0">Datos del Cliente</h5>
-  </div>
+<div class="card p-3 shadow-sm">
+  <h4 class="mb-3">{{ isEditMode ? 'Editar Cliente' : 'Registrar Nuevo Cliente' }}</h4>
 
-  <div class="card-body">
-    <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
 
-      <!-- Nombre de la Empresa -->
-      <div class="form-group mb-3">
-        <label>Nombre de la Empresa *</label>
-        <input type="text" formControlName="nombre_empresa" class="form-control" placeholder="Ej: Logística Rápida Ltda.">
-        <small class="text-danger" *ngIf="submitted && clienteForm.controls['nombre_empresa'].invalid">
-          El nombre de la empresa es obligatorio.
-        </small>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label>Nombre de Empresa</label>
+        <input type="text" formControlName="nombreEmpresa" class="form-control">
       </div>
-
-      <!-- Persona de Contacto -->
-      <div class="form-group mb-3">
-        <label>Persona de Contacto *</label>
-        <input type="text" formControlName="persona_contacto" class="form-control" placeholder="Ej: Pedro Sánchez">
-        <small class="text-danger" *ngIf="submitted && clienteForm.controls['persona_contacto'].invalid">
-          El nombre del contacto es obligatorio.
-        </small>
+      <div class="col-md-6">
+        <label>Contacto</label>
+        <input type="text" formControlName="contacto" class="form-control">
       </div>
+    </div>
 
-      <!-- Teléfono -->
-      <div class="form-group mb-3">
-        <label>Teléfono *</label>
-        <input type="text" formControlName="telefono" class="form-control" placeholder="Ej: 55512345">
-        <small class="text-danger" *ngIf="submitted && clienteForm.controls['telefono'].invalid">
-          El teléfono es obligatorio.
-        </small>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label>Teléfono</label>
+        <input type="text" formControlName="telefono" class="form-control">
       </div>
-
-      <!-- Correo electrónico -->
-      <div class="form-group mb-3">
-        <label>Correo electrónico *</label>
-        <input type="email" formControlName="email" class="form-control" placeholder="Ej: contacto@empresa.com">
-        <small class="text-danger" *ngIf="submitted && clienteForm.controls['email'].invalid">
-          El email es obligatorio.
-        </small>
+      <div class="col-md-6">
+        <label>Email</label>
+        <input type="email" formControlName="email" class="form-control">
       </div>
+    </div>
 
-      <!-- Mapa -->
-      <div class="form-group mb-3">
-        <label>Ubicación del Cliente (Seleccione en el mapa)</label>
-        <div id="map" style="height: 350px; width: 100%; border-radius: 10px; border: 1px solid #ccc;"></div>
-      </div>
-
-      <!-- Latitud -->
-      <div class="form-group mb-3">
+    <div class="row mb-3">
+      <div class="col-md-6">
         <label>Latitud</label>
-        <input type="text" formControlName="latitud" class="form-control" placeholder="Ej: 14.6349">
+        <input type="text" formControlName="latitud" class="form-control">
       </div>
-
-      <!-- Longitud -->
-      <div class="form-group mb-3">
+      <div class="col-md-6">
         <label>Longitud</label>
-        <input type="text" formControlName="longitud" class="form-control" placeholder="Ej: -90.5069">
+        <input type="text" formControlName="longitud" class="form-control">
       </div>
+    </div>
 
-      <!-- Botones -->
-      <div class="d-flex justify-content-start mt-4">
-        <button type="submit" class="btn btn-primary">Crear Cliente</button>
-        <button type="button" class="btn btn-secondary ms-2" (click)="onCancel()">Cancelar</button>
-      </div>
-    </form>
-  </div>
+    <button type="submit" class="btn btn-primary">
+      {{ isEditMode ? 'Actualizar Cliente' : 'Guardar Cliente' }}
+    </button>
+  </form>
 </div>
